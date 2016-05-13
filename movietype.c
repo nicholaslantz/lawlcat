@@ -16,11 +16,11 @@ int main(int argc, char **argv) {
         char b[2];
         sprintf(b, "%c", c);
         if (strstr(vowels, b))
-            usleep(30000);
+            usleep(1500);
         else if (isspace(c))
-            usleep(10000);
+            usleep(500);
         else
-            usleep(70000);
+            usleep(3500);
     }
 
     return EXIT_SUCCESS;
