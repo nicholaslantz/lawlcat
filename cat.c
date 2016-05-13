@@ -16,12 +16,14 @@ const char *colors[] = {
 
 const int COLORS_SIZE = sizeof(colors) / sizeof(char*);
 
-void colorize(int phase);
+void colorize(int phase, FILE *out);
+void pretty_output(FILE *in, FILE *out);
 
 int main(int argc, char **argv) {
     int start_phase = 0;
     int curr_phase = start_phase;
     int i = 0;
+
     if (argc > 1) {
         /* Open, concatenate files */
         FILE *f;
@@ -29,45 +31,56 @@ int main(int argc, char **argv) {
         for (i = 1; i < argc; i++) {
             f = fopen(argv[i], "r");
             if (f == NULL) {
-                perror("cat");
+                perror("lawlcat");
                 continue;
             }
-            char c;
-            while ((c = getc(f)) != EOF) {
-                colorize(curr_phase);
-                putchar(c);
-                fflush(stdout);
-                i++;
-                if (i % 5 == 0) {
-                    curr_phase = (curr_phase + 1) % COLORS_SIZE;
-                    i = 0;
-                }
-                if (c == '\n') {
-                    start_phase = (start_phase + 1) % COLORS_SIZE;
-                    curr_phase = start_phase;
-                }
-            }
+            pretty_output(f, stdout);
         }
-    } else {
-        /* copy stdin */
-        char c;
-        while ((c = getc(stdin)) != EOF) {
-            putchar(c);
-            fflush(stdout);
-        }
-    }
-
-    colorize(0);
+    } else
+        pretty_output(stdin, stdout);
 
     return EXIT_SUCCESS;
 }
 /**
- * Colorize - Outputs color escape character
+ * colorize - Outputs color escape character
  * @param phase - A number between 0 and 29 inclusive
  */
 
-void colorize(int phase) {
+void colorize(int phase, FILE *out) {
     static char b[512];
     sprintf(b, "%s%s", intro, colors[phase]);
-    printf(b);
+    fputs(b, out);
+}
+
+/**
+ * pretty_output - Pipes text in a fabulous way
+ * @param in - input file stream
+ * @param out - output file stream
+ *
+ * Does not check if in and out are valid streams, don't
+ * mess with it
+ */
+
+void pretty_output(FILE *in, FILE *out) {
+    int start_phase = 0;
+    int curr_phase = 0;
+    int i = 0;
+
+    char c;
+    while ((c = getc(in)) != EOF) {
+        colorize(curr_phase, out);
+        putc(c, out);
+        fflush(out);
+
+        i++;
+        if (i % 5 == 0) {
+            i = 0;
+            curr_phase = (curr_phase + 1) % COLORS_SIZE;
+        }
+
+        if (c == '\n') {
+            start_phase = (start_phase + 1) % COLORS_SIZE;
+            curr_phase = start_phase;
+        }
+    }
 }
