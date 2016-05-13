@@ -1,4 +1,7 @@
-
+/*
+ * Jack Rosenthal supplied the idea for this program. Hoever,
+ * this is my own implementation of it.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
