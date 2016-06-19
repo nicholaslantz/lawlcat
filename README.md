@@ -22,5 +22,3 @@ this will build lawlcat.c and movietype.c.
 
 Alternatively, just build the files manually. They do not require any
 external libraries.
-
-testt////
