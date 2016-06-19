@@ -20,17 +20,13 @@ void colorize(int phase, FILE *out);
 void pretty_output(FILE *in, FILE *out);
 
 int main(int argc, char **argv) {
-    int start_phase = 0;
-    int curr_phase = start_phase;
-    int i = 0;
 
     if (argc > 1) {
         /* Open, concatenate files */
         FILE *f;
         unsigned int i;
         for (i = 1; i < argc; i++) {
-            f = fopen(argv[i], "r");
-            if (f == NULL) {
+            if ((f = fopen(argv[i], "r")) == NULL) {
                 perror("lawlcat");
                 continue;
             }
@@ -47,7 +43,7 @@ int main(int argc, char **argv) {
  */
 
 void colorize(int phase, FILE *out) {
-    static char b[512];
+    static char b[16];
     sprintf(b, "%s%s", intro, colors[phase]);
     fputs(b, out);
 }
@@ -62,9 +58,7 @@ void colorize(int phase, FILE *out) {
  */
 
 void pretty_output(FILE *in, FILE *out) {
-    int start_phase = 0;
-    int curr_phase = 0;
-    int i = 0;
+    int start_phase = 0, curr_phase = 0, i = 0;
 
     char c;
     while ((c = getc(in)) != EOF) {
