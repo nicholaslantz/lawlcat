@@ -66,8 +66,7 @@ void pretty_output(FILE *in, FILE *out) {
         putc(c, out);
         fflush(out);
 
-        i++;
-        if (i % 5 == 0) {
+        if (++i % 5 == 0) {
             i = 0;
             curr_phase = (curr_phase + 1) % COLORS_SIZE;
         }
